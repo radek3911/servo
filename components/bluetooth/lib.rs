@@ -186,22 +186,6 @@ fn is_mock_adapter(adapter: &BluetoothAdapter) -> bool {
         _ => false,
     }
 }
-
-pub struct BluetoothManager {
-    receiver: IpcReceiver<BluetoothRequest>,
-    adapter: Option<BluetoothAdapter>,
-    address_to_id: HashMap<String, String>,
-    service_to_device: HashMap<String, String>,
-    characteristic_to_service: HashMap<String, String>,
-    descriptor_to_characteristic: HashMap<String, String>,
-    cached_devices: HashMap<String, BluetoothDevice>,
-    cached_services: HashMap<String, BluetoothGATTService>,
-    cached_characteristics: HashMap<String, BluetoothGATTCharacteristic>,
-    cached_descriptors: HashMap<String, BluetoothGATTDescriptor>,
-    allowed_services: HashMap<String, HashSet<String>>,
-    embedder_proxy: EmbedderProxy,
-}
-
 impl BluetoothManager {
     pub fn new(
         receiver: IpcReceiver<BluetoothRequest>,
@@ -272,6 +256,22 @@ impl BluetoothManager {
             }
         }
     }
+pub struct BluetoothManager {
+    receiver: IpcReceiver<BluetoothRequest>,
+    adapter: Option<BluetoothAdapter>,
+    address_to_id: HashMap<String, String>,
+    service_to_device: HashMap<String, String>,
+    characteristic_to_service: HashMap<String, String>,
+    descriptor_to_characteristic: HashMap<String, String>,
+    cached_devices: HashMap<String, BluetoothDevice>,
+    cached_services: HashMap<String, BluetoothGATTService>,
+    cached_characteristics: HashMap<String, BluetoothGATTCharacteristic>,
+    cached_descriptors: HashMap<String, BluetoothGATTDescriptor>,
+    allowed_services: HashMap<String, HashSet<String>>,
+    embedder_proxy: EmbedderProxy,
+}
+
+
 
     // Test
 
