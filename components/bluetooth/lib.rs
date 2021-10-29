@@ -314,38 +314,6 @@ pub struct BluetoothManager {
         }
     }
 
-    // Adapter
-
-    pub fn get_or_create_adapter(&mut self) -> Option<BluetoothAdapter> {
-        let adapter_valid = self
-            .adapter
-            .as_ref()
-            .map_or(false, |a| a.get_address().is_ok());
-        if !adapter_valid {
-            self.adapter = BluetoothAdapter::init().ok();
-        }
-
-        let adapter = self.adapter.as_ref()?;
-
-        if is_mock_adapter(adapter) && !adapter.is_present().unwrap_or(false) {
-            return None;
-        }
-
-        self.adapter.clone()
-    }
-
-    fn get_adapter(&mut self) -> BluetoothResult<BluetoothAdapter> {
-        match self.get_or_create_adapter() {
-            Some(adapter) => {
-                if !adapter.is_powered().unwrap_or(false) {
-                    return Err(BluetoothError::NotFound);
-                }
-                return Ok(adapter);
-            },
-            None => return Err(BluetoothError::NotFound),
-        }
-    }
-
     // Device
 
     fn get_and_cache_devices(&mut self, adapter: &mut BluetoothAdapter) -> Vec<BluetoothDevice> {
@@ -444,6 +412,38 @@ pub struct BluetoothManager {
         match self.get_device(&mut adapter, device_id) {
             Some(ref device) => Ok(matches_filters(device, filters)),
             None => Ok(false),
+        }
+    }
+
+    // Adapter
+
+    pub fn get_or_create_adapter(&mut self) -> Option<BluetoothAdapter> {
+        let adapter_valid = self
+            .adapter
+            .as_ref()
+            .map_or(false, |a| a.get_address().is_ok());
+        if !adapter_valid {
+            self.adapter = BluetoothAdapter::init().ok();
+        }
+
+        let adapter = self.adapter.as_ref()?;
+
+        if is_mock_adapter(adapter) && !adapter.is_present().unwrap_or(false) {
+            return None;
+        }
+
+        self.adapter.clone()
+    }
+
+    fn get_adapter(&mut self) -> BluetoothResult<BluetoothAdapter> {
+        match self.get_or_create_adapter() {
+            Some(adapter) => {
+                if !adapter.is_powered().unwrap_or(false) {
+                    return Err(BluetoothError::NotFound);
+                }
+                return Ok(adapter);
+            },
+            None => return Err(BluetoothError::NotFound),
         }
     }
 
